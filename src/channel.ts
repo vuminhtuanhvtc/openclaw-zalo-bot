@@ -44,7 +44,7 @@ const meta = {
   blurb: "Zalo Bot API with photo_url and image+caption fixes.",
   aliases: ["zb"],
   order: 81,
-  quickstartAllowFrom: true,
+  quickstartAllowFrom: false,
 };
 
 function normalizeZaloMessagingTarget(raw: string): string | undefined {
