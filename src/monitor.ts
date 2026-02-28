@@ -349,6 +349,17 @@ async function processMessageWithPipeline(params: {
   }
 
   const rawBody = (mediaPath ? "<media:image>\n" : "") + (text?.trim() || "");
+  const debugReadAllowFromStore = async () => {
+    const storeResult = await core.channel.pairing.readAllowFromStore("zalo_bot");
+    console.log(`[zalo_bot:debug] readAllowFromStore("zalo_bot") returned:`, JSON.stringify(storeResult));
+    return storeResult;
+  };
+  const debugIsSenderAllowed = (sid: string, allowList: string[]) => {
+    const result = isZaloSenderAllowed(sid, allowList);
+    console.log(`[zalo_bot:debug] isSenderAllowed(${sid}, ${JSON.stringify(allowList)}) => ${result}`);
+    return result;
+  };
+  console.log(`[zalo_bot:debug] senderId=${senderId}, dmPolicy=${dmPolicy}, configAllowFrom=${JSON.stringify(configAllowFrom)}`);
   const { senderAllowedForCommands, commandAuthorized } = await resolveSenderCommandAuthorization({
     cfg: config,
     rawBody,
@@ -356,13 +367,14 @@ async function processMessageWithPipeline(params: {
     dmPolicy,
     configuredAllowFrom: configAllowFrom,
     senderId,
-    isSenderAllowed: isZaloSenderAllowed,
-    readAllowFromStore: () => core.channel.pairing.readAllowFromStore("zalo_bot"),
+    isSenderAllowed: debugIsSenderAllowed,
+    readAllowFromStore: debugReadAllowFromStore,
     shouldComputeCommandAuthorized: (body, cfg) =>
       core.channel.commands.shouldComputeCommandAuthorized(body, cfg),
     resolveCommandAuthorizedFromAuthorizers: (params) =>
       core.channel.commands.resolveCommandAuthorizedFromAuthorizers(params),
   });
+  console.log(`[zalo_bot:debug] senderAllowedForCommands=${senderAllowedForCommands}, commandAuthorized=${commandAuthorized}`);
 
   if (!isGroup) {
     if (dmPolicy === "disabled") {
