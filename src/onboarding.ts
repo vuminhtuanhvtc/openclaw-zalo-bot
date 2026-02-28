@@ -22,13 +22,13 @@ function setZaloDmPolicy(
   dmPolicy: "pairing" | "allowlist" | "open" | "disabled",
 ) {
   const allowFrom =
-    dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.zalo?.allowFrom) : undefined;
+    dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.zalo_bot?.allowFrom) : undefined;
   return {
     ...cfg,
     channels: {
       ...cfg.channels,
       zalo: {
-        ...cfg.channels?.zalo,
+        ...cfg.channels?.zalo_bot,
         dmPolicy,
         ...(allowFrom ? { allowFrom } : {}),
       },
@@ -52,7 +52,7 @@ function setZaloUpdateMode(
         webhookSecret: _secret,
         webhookPath: _path,
         ...rest
-      } = cfg.channels?.zalo ?? {};
+      } = cfg.channels?.zalo_bot ?? {};
       return {
         ...cfg,
         channels: {
@@ -61,7 +61,7 @@ function setZaloUpdateMode(
         },
       } as OpenClawConfig;
     }
-    const accounts = { ...cfg.channels?.zalo?.accounts } as Record<string, Record<string, unknown>>;
+    const accounts = { ...cfg.channels?.zalo_bot?.accounts } as Record<string, Record<string, unknown>>;
     const existing = accounts[accountId] ?? {};
     const { webhookUrl: _url, webhookSecret: _secret, webhookPath: _path, ...rest } = existing;
     accounts[accountId] = rest;
@@ -70,7 +70,7 @@ function setZaloUpdateMode(
       channels: {
         ...cfg.channels,
         zalo: {
-          ...cfg.channels?.zalo,
+          ...cfg.channels?.zalo_bot,
           accounts,
         },
       },
@@ -83,7 +83,7 @@ function setZaloUpdateMode(
       channels: {
         ...cfg.channels,
         zalo: {
-          ...cfg.channels?.zalo,
+          ...cfg.channels?.zalo_bot,
           webhookUrl,
           webhookSecret,
           webhookPath,
@@ -92,7 +92,7 @@ function setZaloUpdateMode(
     } as OpenClawConfig;
   }
 
-  const accounts = { ...cfg.channels?.zalo?.accounts } as Record<string, Record<string, unknown>>;
+  const accounts = { ...cfg.channels?.zalo_bot?.accounts } as Record<string, Record<string, unknown>>;
   accounts[accountId] = {
     ...accounts[accountId],
     webhookUrl,
@@ -104,7 +104,7 @@ function setZaloUpdateMode(
     channels: {
       ...cfg.channels,
       zalo: {
-        ...cfg.channels?.zalo,
+        ...cfg.channels?.zalo_bot,
         accounts,
       },
     },
@@ -118,7 +118,7 @@ async function noteZaloTokenHelp(prompter: WizardPrompter): Promise<void> {
       "2) Create a bot and get the token",
       "3) Token looks like 12345689:abc-xyz",
       "Tip: you can also set ZALO_BOT_TOKEN in your env.",
-      "Docs: https://docs.openclaw.ai/channels/zalo",
+      "Docs: https://docs.openclaw.ai/channels/zalo_bot",
     ].join("\n"),
     "Zalo bot token",
   );
@@ -156,7 +156,7 @@ async function promptZaloAllowFrom(params: {
       channels: {
         ...cfg.channels,
         zalo: {
-          ...cfg.channels?.zalo,
+          ...cfg.channels?.zalo_bot,
           enabled: true,
           dmPolicy: "allowlist",
           allowFrom: unique,
@@ -170,13 +170,13 @@ async function promptZaloAllowFrom(params: {
     channels: {
       ...cfg.channels,
       zalo: {
-        ...cfg.channels?.zalo,
+        ...cfg.channels?.zalo_bot,
         enabled: true,
         accounts: {
-          ...cfg.channels?.zalo?.accounts,
+          ...cfg.channels?.zalo_bot?.accounts,
           [accountId]: {
-            ...cfg.channels?.zalo?.accounts?.[accountId],
-            enabled: cfg.channels?.zalo?.accounts?.[accountId]?.enabled ?? true,
+            ...cfg.channels?.zalo_bot?.accounts?.[accountId],
+            enabled: cfg.channels?.zalo_bot?.accounts?.[accountId]?.enabled ?? true,
             dmPolicy: "allowlist",
             allowFrom: unique,
           },
@@ -189,9 +189,9 @@ async function promptZaloAllowFrom(params: {
 const dmPolicy: ChannelOnboardingDmPolicy = {
   label: "Zalo",
   channel,
-  policyKey: "channels.zalo.dmPolicy",
-  allowFromKey: "channels.zalo.allowFrom",
-  getCurrent: (cfg) => (cfg.channels?.zalo?.dmPolicy ?? "pairing") as "pairing",
+  policyKey: "channels.zalo_bot.dmPolicy",
+  allowFromKey: "channels.zalo_bot.allowFrom",
+  getCurrent: (cfg) => (cfg.channels?.zalo_bot?.dmPolicy ?? "pairing") as "pairing",
   setPolicy: (cfg, policy) => setZaloDmPolicy(cfg, policy),
   promptAllowFrom: async ({ cfg, prompter, accountId }) => {
     const id =
@@ -216,7 +216,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
     return {
       channel,
       configured,
-      statusLines: [`Zalo: ${configured ? "configured" : "needs token"}`],
+      statusLines: [`zalo_bot: ${configured ? "configured" : "needs token"}`],
       selectionHint: configured ? "recommended · configured" : "recommended · newcomer-friendly",
       quickstartScore: configured ? 1 : 10,
     };
@@ -266,7 +266,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           channels: {
             ...next.channels,
             zalo: {
-              ...next.channels?.zalo,
+              ...next.channels?.zalo_bot,
               enabled: true,
             },
           },
@@ -308,7 +308,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           channels: {
             ...next.channels,
             zalo: {
-              ...next.channels?.zalo,
+              ...next.channels?.zalo_bot,
               enabled: true,
               botToken: token,
             },
@@ -320,12 +320,12 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           channels: {
             ...next.channels,
             zalo: {
-              ...next.channels?.zalo,
+              ...next.channels?.zalo_bot,
               enabled: true,
               accounts: {
-                ...next.channels?.zalo?.accounts,
+                ...next.channels?.zalo_bot?.accounts,
                 [zaloAccountId]: {
-                  ...next.channels?.zalo?.accounts?.[zaloAccountId],
+                  ...next.channels?.zalo_bot?.accounts?.[zaloAccountId],
                   enabled: true,
                   botToken: token,
                 },
@@ -350,9 +350,9 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
       ).trim();
       const defaultPath = (() => {
         try {
-          return new URL(webhookUrl).pathname || "/zalo-webhook";
+          return new URL(webhookUrl).pathname || "/zalo_bot-webhook";
         } catch {
-          return "/zalo-webhook";
+          return "/zalo_bot-webhook";
         }
       })();
       const webhookSecret = String(

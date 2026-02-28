@@ -11,16 +11,16 @@
       "./index.ts"
     ],
     "channel": {
-      "id": "zalo",
-      "label": "Zalo",
-      "selectionLabel": "Zalo (Bot API)",
+      "id": "zalo_bot",
+      "label": "Zalo Bot",
+      "selectionLabel": "Zalo Bot (Bot API)",
       "docsPath": "/channels/zalo",
-      "docsLabel": "zalo",
+      "docsLabel": "zalo_bot",
       "blurb": "Vietnam-focused messaging platform with Bot API (patched).",
       "aliases": [
-        "zl"
+        "zb"
       ],
-      "order": 80,
+      "order": 81,
       "quickstartAllowFrom": true
     },
     "install": {

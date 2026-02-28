@@ -1,6 +1,6 @@
 {
   "id": "zalo_bot",
-  "channels": ["zalo"],
+  "channels": ["zalo_bot"],
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

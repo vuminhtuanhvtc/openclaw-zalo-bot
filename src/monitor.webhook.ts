@@ -109,7 +109,7 @@ function recordWebhookStatus(
   webhookStatusCounters.set(key, next);
   if (next === 1 || next % ZALO_WEBHOOK_COUNTER_LOG_EVERY === 0) {
     runtime?.log?.(
-      `[zalo] webhook anomaly path=${path} status=${statusCode} count=${String(next)}`,
+      `[zalo_bot] webhook anomaly path=${path} status=${statusCode} count=${String(next)}`,
     );
   }
 }

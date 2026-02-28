@@ -64,7 +64,7 @@ type ZaloCoreRuntime = ReturnType<typeof getZaloRuntime>;
 
 function logVerbose(core: ZaloCoreRuntime, runtime: ZaloRuntimeEnv, message: string): void {
   if (core.logging.shouldLogVerbose()) {
-    runtime.log?.(`[zalo] ${message}`);
+    runtime.log?.(`[zalo_bot] ${message}`);
   }
 }
 
@@ -318,7 +318,7 @@ async function processMessageWithPipeline(params: {
   const defaultGroupPolicy = resolveDefaultGroupPolicy(config);
   const groupAccess = isGroup
     ? evaluateZaloGroupAccess({
-        providerConfigPresent: config.channels?.zalo !== undefined,
+        providerConfigPresent: config.channels?.zalo_bot !== undefined,
         configuredGroupPolicy: account.config.groupPolicy,
         defaultGroupPolicy,
         groupAllowFrom,
@@ -328,21 +328,21 @@ async function processMessageWithPipeline(params: {
   if (groupAccess) {
     warnMissingProviderGroupPolicyFallbackOnce({
       providerMissingFallbackApplied: groupAccess.providerMissingFallbackApplied,
-      providerKey: "zalo",
+      providerKey: "zalo_bot",
       accountId: account.accountId,
       log: (message) => logVerbose(core, runtime, message),
     });
     if (!groupAccess.allowed) {
       if (groupAccess.reason === "disabled") {
-        logVerbose(core, runtime, `zalo: drop group ${chatId} (groupPolicy=disabled)`);
+        logVerbose(core, runtime, `zalo_bot: drop group ${chatId} (groupPolicy=disabled)`);
       } else if (groupAccess.reason === "empty_allowlist") {
         logVerbose(
           core,
           runtime,
-          `zalo: drop group ${chatId} (groupPolicy=allowlist, no groupAllowFrom)`,
+          `zalo_bot: drop group ${chatId} (groupPolicy=allowlist, no groupAllowFrom)`,
         );
       } else if (groupAccess.reason === "sender_not_allowlisted") {
-        logVerbose(core, runtime, `zalo: drop group sender ${senderId} (groupPolicy=allowlist)`);
+        logVerbose(core, runtime, `zalo_bot: drop group sender ${senderId} (groupPolicy=allowlist)`);
       }
       return;
     }
@@ -357,7 +357,7 @@ async function processMessageWithPipeline(params: {
     configuredAllowFrom: configAllowFrom,
     senderId,
     isSenderAllowed: isZaloSenderAllowed,
-    readAllowFromStore: () => core.channel.pairing.readAllowFromStore("zalo"),
+    readAllowFromStore: () => core.channel.pairing.readAllowFromStore("zalo_bot"),
     shouldComputeCommandAuthorized: (body, cfg) =>
       core.channel.commands.shouldComputeCommandAuthorized(body, cfg),
     resolveCommandAuthorizedFromAuthorizers: (params) =>
@@ -376,7 +376,7 @@ async function processMessageWithPipeline(params: {
       if (!allowed) {
         if (dmPolicy === "pairing") {
           const { code, created } = await core.channel.pairing.upsertPairingRequest({
-            channel: "zalo",
+            channel: "zalo_bot",
             id: senderId,
             meta: { name: senderName ?? undefined },
           });
@@ -389,7 +389,7 @@ async function processMessageWithPipeline(params: {
                 {
                   chat_id: chatId,
                   text: core.channel.pairing.buildPairingReply({
-                    channel: "zalo",
+                    channel: "zalo_bot",
                     idLine: `Your Zalo user id: ${senderId}`,
                     code,
                   }),
@@ -419,7 +419,7 @@ async function processMessageWithPipeline(params: {
 
   const route = core.channel.routing.resolveAgentRoute({
     cfg: config,
-    channel: "zalo",
+    channel: "zalo_bot",
     accountId: account.accountId,
     peer: {
       kind: isGroup ? "group" : "direct",
@@ -432,7 +432,7 @@ async function processMessageWithPipeline(params: {
     core.channel.commands.isControlCommandMessage(rawBody, config) &&
     commandAuthorized !== true
   ) {
-    logVerbose(core, runtime, `zalo: drop control command from unauthorized sender ${senderId}`);
+    logVerbose(core, runtime, `zalo_bot: drop control command from unauthorized sender ${senderId}`);
     return;
   }
 
@@ -446,7 +446,7 @@ async function processMessageWithPipeline(params: {
     sessionKey: route.sessionKey,
   });
   const body = core.channel.reply.formatAgentEnvelope({
-    channel: "Zalo",
+    channel: "zalo_bot",
     from: fromLabel,
     timestamp: date ? date * 1000 : undefined,
     previousTimestamp,
@@ -459,8 +459,8 @@ async function processMessageWithPipeline(params: {
     BodyForAgent: rawBody,
     RawBody: rawBody,
     CommandBody: rawBody,
-    From: isGroup ? `zalo:group:${chatId}` : `zalo:${senderId}`,
-    To: `zalo:${chatId}`,
+    From: isGroup ? `zalo_bot:group:${chatId}` : `zalo_bot:${senderId}`,
+    To: `zalo_bot:${chatId}`,
     SessionKey: route.sessionKey,
     AccountId: route.accountId,
     ChatType: isGroup ? "group" : "direct",
@@ -468,14 +468,14 @@ async function processMessageWithPipeline(params: {
     SenderName: senderName || undefined,
     SenderId: senderId,
     CommandAuthorized: commandAuthorized,
-    Provider: "zalo",
-    Surface: "zalo",
+    Provider: "zalo_bot",
+    Surface: "zalo_bot",
     MessageSid: message_id,
     MediaPath: mediaPath,
     MediaType: mediaType,
     MediaUrl: mediaPath,
-    OriginatingChannel: "zalo",
-    OriginatingTo: `zalo:${chatId}`,
+    OriginatingChannel: "zalo_bot",
+    OriginatingTo: `zalo_bot:${chatId}`,
   });
 
   await core.channel.session.recordInboundSession({
@@ -483,19 +483,19 @@ async function processMessageWithPipeline(params: {
     sessionKey: ctxPayload.SessionKey ?? route.sessionKey,
     ctx: ctxPayload,
     onRecordError: (err) => {
-      runtime.error?.(`zalo: failed updating session meta: ${String(err)}`);
+      runtime.error?.(`zalo_bot: failed updating session meta: ${String(err)}`);
     },
   });
 
   const tableMode = core.channel.text.resolveMarkdownTableMode({
     cfg: config,
-    channel: "zalo",
+    channel: "zalo_bot",
     accountId: account.accountId,
   });
   const { onModelSelected, ...prefixOptions } = createReplyPrefixOptions({
     cfg: config,
     agentId: route.agentId,
-    channel: "zalo",
+    channel: "zalo_bot",
     accountId: account.accountId,
   });
 
@@ -560,7 +560,7 @@ async function deliverZaloReply(params: {
   }
 
   if (text) {
-    const chunkMode = core.channel.text.resolveChunkMode(config, "zalo", accountId);
+    const chunkMode = core.channel.text.resolveChunkMode(config, "zalo_bot", accountId);
     const chunks = core.channel.text.chunkMarkdownTextWithMode(text, ZALO_TEXT_LIMIT, chunkMode);
     for (const chunk of chunks) {
       try {

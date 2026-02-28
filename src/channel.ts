@@ -36,7 +36,7 @@ import { sendMessageZalo } from "./send.js";
 import { collectZaloStatusIssues } from "./status-issues.js";
 
 const meta = {
-  id: "zalo",
+  id: "zalo_bot",
   label: "Zalo",
   selectionLabel: "Zalo (Bot API)",
   docsPath: "/channels/zalo",
@@ -52,11 +52,11 @@ function normalizeZaloMessagingTarget(raw: string): string | undefined {
   if (!trimmed) {
     return undefined;
   }
-  return trimmed.replace(/^(zalo|zl):/i, "");
+  return trimmed.replace(/^(zalo_bot|zb):/i, "");
 }
 
 export const zaloDock: ChannelDock = {
-  id: "zalo",
+  id: "zalo_bot",
   capabilities: {
     chatTypes: ["direct", "group"],
     media: true,
@@ -69,7 +69,7 @@ export const zaloDock: ChannelDock = {
         String(entry),
       ),
     formatAllowFrom: ({ allowFrom }) =>
-      formatAllowFromLowercase({ allowFrom, stripPrefixRe: /^(zalo|zl):/i }),
+      formatAllowFromLowercase({ allowFrom, stripPrefixRe: /^(zalo_bot|zb):/i }),
   },
   groups: {
     resolveRequireMention: () => true,
@@ -80,7 +80,7 @@ export const zaloDock: ChannelDock = {
 };
 
 export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
-  id: "zalo",
+  id: "zalo_bot",
   meta,
   onboarding: zaloOnboardingAdapter,
   capabilities: {
@@ -92,7 +92,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
     nativeCommands: false,
     blockStreaming: true,
   },
-  reload: { configPrefixes: ["channels.zalo"] },
+  reload: { configPrefixes: ["channels.zalo_bot"] },
   configSchema: buildChannelConfigSchema(ZaloConfigSchema),
   config: {
     listAccountIds: (cfg) => listZaloAccountIds(cfg),
@@ -101,7 +101,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
     setAccountEnabled: ({ cfg, accountId, enabled }) =>
       setAccountEnabledInConfigSection({
         cfg: cfg,
-        sectionKey: "zalo",
+        sectionKey: "zalo_bot",
         accountId,
         enabled,
         allowTopLevel: true,
@@ -109,7 +109,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
     deleteAccount: ({ cfg, accountId }) =>
       deleteAccountFromConfigSection({
         cfg: cfg,
-        sectionKey: "zalo",
+        sectionKey: "zalo_bot",
         accountId,
         clearBaseFields: ["botToken", "tokenFile", "name"],
       }),
@@ -126,14 +126,14 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         String(entry),
       ),
     formatAllowFrom: ({ allowFrom }) =>
-      formatAllowFromLowercase({ allowFrom, stripPrefixRe: /^(zalo|zl):/i }),
+      formatAllowFromLowercase({ allowFrom, stripPrefixRe: /^(zalo_bot|zb):/i }),
   },
   security: {
     resolveDmPolicy: ({ cfg, accountId, account }) => {
       const resolvedAccountId = accountId ?? account.accountId ?? DEFAULT_ACCOUNT_ID;
       const basePath = resolveChannelAccountConfigBasePath({
         cfg,
-        channelKey: "zalo",
+        channelKey: "zalo_bot",
         accountId: resolvedAccountId,
       });
       return {
@@ -141,14 +141,14 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         allowFrom: account.config.allowFrom ?? [],
         policyPath: `${basePath}dmPolicy`,
         allowFromPath: basePath,
-        approveHint: formatPairingApproveHint("zalo"),
-        normalizeEntry: (raw) => raw.replace(/^(zalo|zl):/i, ""),
+        approveHint: formatPairingApproveHint("zalo_bot"),
+        normalizeEntry: (raw) => raw.replace(/^(zalo_bot|zb):/i, ""),
       };
     },
     collectWarnings: ({ account, cfg }) => {
       const defaultGroupPolicy = resolveDefaultGroupPolicy(cfg);
       const { groupPolicy } = resolveOpenProviderRuntimeGroupPolicy({
-        providerConfigPresent: cfg.channels?.zalo !== undefined,
+        providerConfigPresent: cfg.channels?.zalo_bot !== undefined,
         groupPolicy: account.config.groupPolicy,
         defaultGroupPolicy,
       });
@@ -163,11 +163,11 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         explicitGroupAllowFrom.length > 0 ? explicitGroupAllowFrom : dmAllowFrom;
       if (effectiveAllowFrom.length > 0) {
         return [
-          `- Zalo groups: groupPolicy="open" allows any member to trigger (mention-gated). Set channels.zalo.groupPolicy="allowlist" + channels.zalo.groupAllowFrom to restrict senders.`,
+          `- Zalo groups: groupPolicy="open" allows any member to trigger (mention-gated). Set channels.zalo_bot.groupPolicy="allowlist" + channels.zalo_bot.groupAllowFrom to restrict senders.`,
         ];
       }
       return [
-        `- Zalo groups: groupPolicy="open" with no groupAllowFrom/allowFrom allowlist; any member can trigger (mention-gated). Set channels.zalo.groupPolicy="allowlist" + channels.zalo.groupAllowFrom.`,
+        `- Zalo groups: groupPolicy="open" with no groupAllowFrom/allowFrom allowlist; any member can trigger (mention-gated). Set channels.zalo_bot.groupPolicy="allowlist" + channels.zalo_bot.groupAllowFrom.`,
       ];
     },
   },
@@ -201,7 +201,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
           (account.config.allowFrom ?? [])
             .map((entry) => String(entry).trim())
             .filter((entry) => Boolean(entry) && entry !== "*")
-            .map((entry) => entry.replace(/^(zalo|zl):/i, "")),
+            .map((entry) => entry.replace(/^(zalo_bot|zb):/i, "")),
         ),
       )
         .filter((id) => (q ? id.toLowerCase().includes(q) : true))
@@ -216,7 +216,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
     applyAccountName: ({ cfg, accountId, name }) =>
       applyAccountNameToChannelSection({
         cfg: cfg,
-        channelKey: "zalo",
+        channelKey: "zalo_bot",
         accountId,
         name,
       }),
@@ -232,7 +232,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
     applyAccountConfig: ({ cfg, accountId, input }) => {
       const namedConfig = applyAccountNameToChannelSection({
         cfg: cfg,
-        channelKey: "zalo",
+        channelKey: "zalo_bot",
         accountId,
         name: input.name,
       });
@@ -240,7 +240,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         accountId !== DEFAULT_ACCOUNT_ID
           ? migrateBaseNameToDefaultAccount({
               cfg: namedConfig,
-              channelKey: "zalo",
+              channelKey: "zalo_bot",
             })
           : namedConfig;
       if (accountId === DEFAULT_ACCOUNT_ID) {
@@ -249,7 +249,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
           channels: {
             ...next.channels,
             zalo: {
-              ...next.channels?.zalo,
+              ...next.channels?.zalo_bot,
               enabled: true,
               ...(input.useEnv
                 ? {}
@@ -267,12 +267,12 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         channels: {
           ...next.channels,
           zalo: {
-            ...next.channels?.zalo,
+            ...next.channels?.zalo_bot,
             enabled: true,
             accounts: {
-              ...next.channels?.zalo?.accounts,
+              ...next.channels?.zalo_bot?.accounts,
               [accountId]: {
-                ...next.channels?.zalo?.accounts?.[accountId],
+                ...next.channels?.zalo_bot?.accounts?.[accountId],
                 enabled: true,
                 ...(input.tokenFile
                   ? { tokenFile: input.tokenFile }
@@ -288,7 +288,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
   },
   pairing: {
     idLabel: "zaloUserId",
-    normalizeAllowEntry: (entry) => entry.replace(/^(zalo|zl):/i, ""),
+    normalizeAllowEntry: (entry) => entry.replace(/^(zalo_bot|zb):/i, ""),
     notifyApproval: async ({ cfg, id }) => {
       const account = resolveZaloAccount({ cfg: cfg });
       if (!account.token) {
@@ -308,7 +308,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         cfg: cfg,
       });
       return {
-        channel: "zalo",
+        channel: "zalo_bot",
         ok: result.ok,
         messageId: result.messageId ?? "",
         error: result.error ? new Error(result.error) : undefined,
@@ -321,7 +321,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         cfg: cfg,
       });
       return {
-        channel: "zalo",
+        channel: "zalo_bot",
         ok: result.ok,
         messageId: result.messageId ?? "",
         error: result.error ? new Error(result.error) : undefined,

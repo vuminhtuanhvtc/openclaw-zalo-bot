@@ -41,11 +41,11 @@ export function collectZaloStatusIssues(accounts: ChannelAccountSnapshot[]): Cha
 
     if (account.dmPolicy === "open") {
       issues.push({
-        channel: "zalo",
+        channel: "zalo_bot",
         accountId,
         kind: "config",
         message: 'Zalo dmPolicy is "open", allowing any user to message the bot without pairing.',
-        fix: 'Set channels.zalo.dmPolicy to "pairing" or "allowlist" to restrict access.',
+        fix: 'Set channels.zalo_bot.dmPolicy to "pairing" or "allowlist" to restrict access.',
       });
     }
   }
