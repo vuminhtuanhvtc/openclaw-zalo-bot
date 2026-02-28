@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/zalo-bot",
+  "name": "openclaw-zalo-bot",
   "version": "1.0.2",
   "description": "OpenClaw Zalo channel plugin (Bot API) — patched fork with photo_url and image+caption fixes",
   "type": "module",
@@ -25,9 +25,14 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/zalo-bot",
+      "npmSpec": "openclaw-zalo-bot",
       "localPath": "extensions/zalo_bot",
-      "defaultChoice": "local"
+      "defaultChoice": "npm"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vuminhtuanhvtc/openclaw-zalo-bot.git"
+  },
+  "license": "MIT"
 }
