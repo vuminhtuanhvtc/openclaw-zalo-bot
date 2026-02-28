@@ -37,13 +37,13 @@ import { collectZaloStatusIssues } from "./status-issues.js";
 
 const meta = {
   id: "zalo_bot",
-  label: "Zalo",
-  selectionLabel: "Zalo (Bot API)",
+  label: "Zalo Bot",
+  selectionLabel: "Zalo Bot (Patched)",
   docsPath: "/channels/zalo",
-  docsLabel: "zalo",
-  blurb: "Vietnam-focused messaging platform with Bot API.",
-  aliases: ["zl"],
-  order: 80,
+  docsLabel: "zalo_bot",
+  blurb: "Zalo Bot API with photo_url and image+caption fixes.",
+  aliases: ["zb"],
+  order: 81,
   quickstartAllowFrom: true,
 };
 
@@ -248,7 +248,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
           ...next,
           channels: {
             ...next.channels,
-            zalo: {
+            zalo_bot: {
               ...next.channels?.zalo_bot,
               enabled: true,
               ...(input.useEnv
@@ -266,7 +266,7 @@ export const zaloPlugin: ChannelPlugin<ResolvedZaloAccount> = {
         ...next,
         channels: {
           ...next.channels,
-          zalo: {
+          zalo_bot: {
             ...next.channels?.zalo_bot,
             enabled: true,
             accounts: {
