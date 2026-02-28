@@ -1,0 +1,9 @@
+{
+  "id": "zalo_bot",
+  "channels": ["zalo"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
