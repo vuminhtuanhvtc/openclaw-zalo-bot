@@ -357,7 +357,7 @@ async function processMessageWithPipeline(params: {
     configuredAllowFrom: configAllowFrom,
     senderId,
     isSenderAllowed: isZaloSenderAllowed,
-    readAllowFromStore: () => core.channel.pairing.readAllowFromStore("zalo_bot"),
+    readAllowFromStore: () => core.channel.pairing.readAllowFromStore("zalo_bot", account.accountId),
     shouldComputeCommandAuthorized: (body, cfg) =>
       core.channel.commands.shouldComputeCommandAuthorized(body, cfg),
     resolveCommandAuthorizedFromAuthorizers: (params) =>
