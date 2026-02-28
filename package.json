@@ -1,10 +1,11 @@
 {
   "name": "openclaw-zalo-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OpenClaw Zalo channel plugin (Bot API) — patched fork with photo_url and image+caption fixes",
   "type": "module",
   "dependencies": {
-    "undici": "7.22.0"
+    "undici": "7.22.0",
+    "zod": "^3.24.0"
   },
   "openclaw": {
     "extensions": [
