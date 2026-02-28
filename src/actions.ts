@@ -7,7 +7,7 @@ import { extractToolSend, jsonResult, readStringParam } from "openclaw/plugin-sd
 import { listEnabledZaloAccounts } from "./accounts.js";
 import { sendMessageZalo } from "./send.js";
 
-const providerId = "zalo";
+const providerId = "zalo_bot";
 
 function listEnabledAccounts(cfg: OpenClawConfig) {
   return listEnabledZaloAccounts(cfg).filter(

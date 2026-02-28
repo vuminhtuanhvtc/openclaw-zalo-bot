@@ -13,7 +13,7 @@ import {
 } from "openclaw/plugin-sdk";
 import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts.js";
 
-const channel = "zalo" as const;
+const channel = "zalo_bot" as const;
 
 type UpdateMode = "polling" | "webhook";
 
@@ -27,7 +27,7 @@ function setZaloDmPolicy(
     ...cfg,
     channels: {
       ...cfg.channels,
-      zalo: {
+      zalo_bot: {
         ...cfg.channels?.zalo_bot,
         dmPolicy,
         ...(allowFrom ? { allowFrom } : {}),
@@ -57,7 +57,7 @@ function setZaloUpdateMode(
         ...cfg,
         channels: {
           ...cfg.channels,
-          zalo: rest,
+          zalo_bot: rest,
         },
       } as OpenClawConfig;
     }
@@ -69,7 +69,7 @@ function setZaloUpdateMode(
       ...cfg,
       channels: {
         ...cfg.channels,
-        zalo: {
+        zalo_bot: {
           ...cfg.channels?.zalo_bot,
           accounts,
         },
@@ -82,7 +82,7 @@ function setZaloUpdateMode(
       ...cfg,
       channels: {
         ...cfg.channels,
-        zalo: {
+        zalo_bot: {
           ...cfg.channels?.zalo_bot,
           webhookUrl,
           webhookSecret,
@@ -103,7 +103,7 @@ function setZaloUpdateMode(
     ...cfg,
     channels: {
       ...cfg.channels,
-      zalo: {
+      zalo_bot: {
         ...cfg.channels?.zalo_bot,
         accounts,
       },
@@ -155,7 +155,7 @@ async function promptZaloAllowFrom(params: {
       ...cfg,
       channels: {
         ...cfg.channels,
-        zalo: {
+        zalo_bot: {
           ...cfg.channels?.zalo_bot,
           enabled: true,
           dmPolicy: "allowlist",
@@ -169,7 +169,7 @@ async function promptZaloAllowFrom(params: {
     ...cfg,
     channels: {
       ...cfg.channels,
-      zalo: {
+      zalo_bot: {
         ...cfg.channels?.zalo_bot,
         enabled: true,
         accounts: {
@@ -228,7 +228,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
     shouldPromptAccountIds,
     forceAllowFrom,
   }) => {
-    const zaloOverride = accountOverrides.zalo?.trim();
+    const zaloOverride = accountOverrides.zalo_bot?.trim();
     const defaultZaloAccountId = resolveDefaultZaloAccountId(cfg);
     let zaloAccountId = zaloOverride ? normalizeAccountId(zaloOverride) : defaultZaloAccountId;
     if (shouldPromptAccountIds && !zaloOverride) {
@@ -265,7 +265,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           ...next,
           channels: {
             ...next.channels,
-            zalo: {
+            zalo_bot: {
               ...next.channels?.zalo_bot,
               enabled: true,
             },
@@ -307,7 +307,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           ...next,
           channels: {
             ...next.channels,
-            zalo: {
+            zalo_bot: {
               ...next.channels?.zalo_bot,
               enabled: true,
               botToken: token,
@@ -319,7 +319,7 @@ export const zaloOnboardingAdapter: ChannelOnboardingAdapter = {
           ...next,
           channels: {
             ...next.channels,
-            zalo: {
+            zalo_bot: {
               ...next.channels?.zalo_bot,
               enabled: true,
               accounts: {
