@@ -105,6 +105,7 @@ export async function callZaloApi<T = unknown>(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": "openclaw-zalo-bot/1.0",
       },
       body: body ? JSON.stringify(body) : undefined,
       signal: controller.signal,
