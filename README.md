@@ -1,19 +1,54 @@
-# openclaw-zalo-bot
+# @openclaw/zalo-bot
 
 OpenClaw Zalo channel plugin (Bot API) — patched fork.
 
+## AI Install Metadata
+- Plugin id: zalo_bot
+- Channel id: zalo_bot
+- Package name: @openclaw/zalo-bot
+
 ## Fixes
 
-- **`photo_url` field mapping**: Correctly parses the Zalo Bot API's `photo_url` field for image messages (the original plugin incorrectly expected `photo`)
-- **Image + Caption handling**: When a user sends both an image and text caption, both are now correctly forwarded to the AI agent (the original plugin dropped the image when caption text was present)
+- **`photo_url` field mapping**: Correctly parses the Zalo Bot API's `photo_url` field for image messages
+- **Image + Caption handling**: When a user sends both an image and text caption, both are now correctly forwarded to the AI agent
 
-## Installation
+## Install (local checkout)
 
 ```bash
-# On your Linux server:
-npm install -g github:vuminhtuanhvtc/openclaw-zalo-bot
+# Clone the repo
+git clone https://github.com/vuminhtuanhvtc/openclaw-zalo-bot.git
+cd openclaw-zalo-bot
 
-# Then restart the gateway:
+# Install dependencies
+npm install
+
+# Register with OpenClaw
+openclaw plugins install .
+```
+
+Restart Gateway after installation.
+
+## Quick Start
+
+Add channel config to `openclaw.json`:
+
+```json
+{
+  "channels": {
+    "zalo_bot": {
+      "enabled": true,
+      "token": "YOUR_ZALO_BOT_TOKEN",
+      "webhookUrl": "https://your-domain.com/zalo_bot-webhook",
+      "webhookSecret": "your-webhook-secret",
+      "dmPolicy": "open"
+    }
+  }
+}
+```
+
+Then restart:
+
+```bash
 openclaw gateway restart
 ```
 
